@@ -1,8 +1,4 @@
 from fastapi import FastAPI
-
-from dotenv import load_dotenv
-load_dotenv(dotenv_path= ".env")  # Load environment variables from .env file
-
 from routes import base
 
 app = FastAPI()
