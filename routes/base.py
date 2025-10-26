@@ -1,7 +1,15 @@
 from fastapi import FastAPI, APIRouter
+import os
 
-base_router = APIRouter()
+base_router = APIRouter(
+    prefix= "/api/v1",
+    tags= ["v1"]
+)
 
 @base_router.get("/")
-def welcome():
-    return {"message": "Welcome to the Mini RAG FastAPI application!!"}
+async def welcome():
+    app_name = os.getenv("APP_NAME")
+    app_version = os.getenv("APP_VERSION")
+    return {"message": "Welcome to the Mini RAG FastAPI application!!",
+            "app_name": app_name,
+            "app_version": app_version}
