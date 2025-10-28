@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     FILE_ALLOWED_EXTENSIONS: list
     MAX_FILE_SIZE_MB: int
+    DEFAULT_FILE_CHUNCK_SIZE: int
 
     class Config:
         # check the file exist test before running
