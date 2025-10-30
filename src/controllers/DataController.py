@@ -17,7 +17,7 @@ class DataController(BaseController):
         
         return True, ResponseStatus.FILE_UPLOADED_SUCCESS
     
-    def generate_unique_filename(self, orig_file_name: str, project_id: str):
+    def generate_unique_filpath(self, orig_file_name: str, project_id: str):
         print( "Generating unique filename..." )
         
         random_filename = self.generate_random_string()
@@ -25,14 +25,16 @@ class DataController(BaseController):
 
         cleaned_file_name = self.get_clean_filename(orig_file_name)
 
-        new_path_file_name = os.path.join(project_path, random_filename + '_' + cleaned_file_name)
+        random_key = random_filename + '_' + cleaned_file_name
+        new_path_file_name = os.path.join(project_path, random_key)
 
         while os.path.exists(new_path_file_name):
             random_filename = self.generate_random_string()
-            new_path_file_name = os.path.join(project_path, random_filename + '_' + cleaned_file_name)
+            random_key = random_filename + '_' + cleaned_file_name
+            new_path_file_name = os.path.join(project_path, random_key)
 
         print( f"Generated unique filename: {new_path_file_name}" )
-        return new_path_file_name
+        return new_path_file_name, random_key
 
 
     def get_clean_filename(self, orig_file_name: str):

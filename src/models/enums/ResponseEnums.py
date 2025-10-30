@@ -8,4 +8,5 @@ class ResponseStatus(str, Enum):
     FILE_SIZE_EXCEEDED = "file_size_exceeded"
     FILE_UPLOADED_SUCCESS = "file_uploaded_success :)"
     FILE_UPLOADED_FAILED = "file_upload_failed"
+    FILE_PROCESSING_FAILED = "file_processing_failed"
     

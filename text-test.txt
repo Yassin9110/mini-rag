@@ -1,0 +1,9 @@
+Evolution is the change in the heritable characteristics of biological populations over successive generations.
+It occurs when evolutionary processes such as genetic drift and natural selection act on genetic variation, resulting in certain characteristics becoming more or less common within a population over successive generations.
+The process of evolution has given rise to biodiversity at every level of biological organisation.
+The scientific theory of evolution by natural selection was conceived independently by two British naturalists, Charles Darwin and Alfred Russel Wallace, in the mid-19th century as an explanation for why organisms are adapted to their physical and biological environments.
+The theory was first set out in detail in Darwin's book On the Origin of Species. 
+Evolution by natural selection is established by observable facts about living organisms: more offspring are often produced than can possibly survive; 
+traits vary among individuals with respect to their morphology, physiology, and behaviour; 
+different traits confer different rates of survival and reproduction (differential fitness); and traits can be passed from generation to generation (heritability of fitness). 
+In successive generations, members of a population are therefore more likely to be replaced by the offspring of parents with favourable characteristics for that environment.
