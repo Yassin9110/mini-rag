@@ -7,5 +7,7 @@ pydantic-settings==2.11.0
 aiofiles==25.1.0
 langchain==1.0.3
 PyMuPDF==1.26.5
+motor==3.7.1
+
 
 

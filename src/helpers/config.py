@@ -13,7 +13,10 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str
     FILE_ALLOWED_EXTENSIONS: list
     MAX_FILE_SIZE_MB: int
-    DEFAULT_FILE_CHUNCK_SIZE: int
+    DEFAULT_FILE_CHUNK_SIZE: int
+
+    MONGODB_URL: str
+    MONGODB_DATABASE: str
 
     class Config:
         # check the file exist test before running
