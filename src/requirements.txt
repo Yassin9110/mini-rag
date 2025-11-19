@@ -8,6 +8,10 @@ aiofiles==25.1.0
 langchain==1.0.3
 PyMuPDF==1.26.5
 motor==3.7.1
+openai==2.8.1
+cohere==5.20.0
+google==3.0.0
+google-genai==1.51.0
 
 
 
