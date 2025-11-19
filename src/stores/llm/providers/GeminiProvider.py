@@ -1,5 +1,5 @@
-from LLMInterface import LLMInterface
-from LLMEnums import LLMEnums, GeminiEnums
+from stores.llm.LLMInterface import LLMInterface
+from stores.llm.LLMEnums import LLMEnums, GeminiEnums
 from google import genai
 from google.genai import types
 import logging

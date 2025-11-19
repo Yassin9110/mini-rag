@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     COHERE_API_KEY: str
     OPENAI_API_URL: str
     OPENAI_API_KEY: str
+    GEMINI_API_KEY: str
 
     GENERATION_MODEL: str
     EMBEDDING_MODEL: str
@@ -30,6 +31,10 @@ class Settings(BaseSettings):
     MAX_OUTPUT_TOKENS: int = None
     MAX_INPUT_TOKENS: int = None
     TEMPERATURE: float = None
+
+    VECTOR_DB_BACKEND: str
+    VECTOR_DB_PATH: str
+    DISTANCE_METHOD: str = None
 
     class Config:
         # check the file exist test before running

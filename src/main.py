@@ -3,7 +3,7 @@ from routes import base, data
 from motor.motor_asyncio import AsyncIOMotorClient
 from contextlib import asynccontextmanager
 from helpers.config import get_settings
-from stores.LLMProviderFactory import LLMProviderFactory
+from stores.llm.LLMProviderFactory import LLMProviderFactory
 
 
 
