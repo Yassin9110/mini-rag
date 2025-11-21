@@ -2,6 +2,7 @@ from stores.llm.LLMInterface import LLMInterface
 from stores.llm.LLMEnums import LLMEnums, GeminiEnums
 from google import genai
 from google.genai import types
+from typing import List, Union
 import logging
 
 class GeminiProvider(LLMInterface):
@@ -28,22 +29,51 @@ class GeminiProvider(LLMInterface):
         self.embedding_model = model_id
         self.embedding_dim = embed_dim
 
-    def embed_text(self, text:str, doc_type:str = None):
+    def embed_text(self, text: Union[str, List[str]], doc_type: str = None) -> Union[List[float], List[List[float]], None]:
+    
         if not self.embedding_model:
             self.logger.error("Embedding model not set.")
             return None
         if not self.client:
             self.logger.error("Gemini client not initialized.")
             return None
+
+        # 1. Prepare contents for the API
+        is_single_query = isinstance(text, str)
         
-        response = self.client.models.embed_content(model = self.embedding_model, contents= [text],
-                                                    config=types.EmbedContentConfig(output_dimensionality=self.embedding_dim))
+        # The API always expects a list for 'contents'
+        if is_single_query:
+            contents_to_embed = [text]
+        else:
+            # 'text' is already a List[str]
+            contents_to_embed = text
+            
+        # 2. Call the embedding API
+        try:
+            response = self.client.models.embed_content(
+                model=self.embedding_model, 
+                contents=contents_to_embed,
+                config=types.EmbedContentConfig(output_dimensionality=self.embedding_dim)
+            )
+        except Exception as e:
+            self.logger.error(f"Error calling embedding API: {e}")
+            return None
 
         if not response or not response.embeddings:
             self.logger.error("Invalid response from embedding API.")
             return None
         
-        return response.embeddings
+        # 3. Process and return the results
+        # Extract the numeric vectors from the response objects
+        all_embeddings = [embedding.values for embedding in response.embeddings]
+
+        # If the input was a single string, return just the single vector (List[float])
+        if is_single_query:
+            # We know all_embeddings contains exactly one list, so we return the first element
+            return all_embeddings[0]
+        else:
+            # If the input was a list of strings, return the list of vectors (List[List[float]])
+            return all_embeddings
     
     def process_text(self, text: str):
         return text[:self.default_max_input_tokens].strip()

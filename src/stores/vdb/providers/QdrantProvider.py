@@ -1,8 +1,9 @@
-from VDBInterface import VDBInterface
-from VDBEnums import VDBEnums, DistanceMethodEnums
+from ..VDBInterface import VDBInterface
+from ..VDBEnums import VDBEnums, DistanceMethodEnums
 import logging
 from qdrant_client import QdrantClient, models
-from typing import List
+import numpy as np
+from typing import List, Union
 
 class QdrantProvider(VDBInterface):
     def __init__(self, db_path: str, distance_method):
@@ -63,13 +64,13 @@ class QdrantProvider(VDBInterface):
         
         return True
     
-    def insert_many(self, collection_name, texts, vectors, metadatas, ids = None, batch_size = 50):
+    def insert_many(self, collection_name, texts, vectors, metadatas, ids, batch_size = 50):
         
         if metadatas is None:
-            metadatas = [None] + len(texts)
+            metadatas = [None] * len(texts)
 
         if ids is None:
-            ids = [None] + len(texts)
+            ids = list(range(0, len(texts)))
 
         for i in range(0, len(texts), batch_size):
             batch_end = i + batch_size
@@ -77,10 +78,11 @@ class QdrantProvider(VDBInterface):
             batch_texts = texts[i:batch_end]
             batch_vectors = vectors[i:batch_end]
             batch_metadata = metadatas[i:batch_end]
+            batch_ids = ids[i:batch_end]
 
             batch_records = [
                 models.PointStruct(
-                    id = ids[x],
+                    id = batch_ids[x],
                     vector= batch_vectors[x], 
                     payload= {
                         "texts": batch_texts, "metadata": batch_metadata[x]
@@ -93,10 +95,13 @@ class QdrantProvider(VDBInterface):
 
         return True
     
-    def search_by_vector(self, collection_name, query_vector, top_k = 10):
-        return self.client.query_points(collection_name= collection_name,
-                                        query= query_vector, 
-                                        limit= top_k
-                                        )
-        
+    def search_by_vector(self, collection_name, query_vector, top_k=10):
+        query_vector = np.array(query_vector).astype(np.float32)
+        result = self.client.query_points(
+            collection_name=collection_name,
+            query=query_vector.tolist(),
+            limit=top_k
+        )
+
+        return result
 

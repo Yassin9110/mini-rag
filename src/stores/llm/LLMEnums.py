@@ -1,12 +1,12 @@
 from enum import Enum
 
 class LLMEnums(Enum):
-    OPENAI = "openai"
+    OPENAI = "OPENAI"
     ANTHROPIC = "anthropic"
-    COHERE = "cohere"
+    COHERE = "COHERE"
     AI21 = "ai21"
     CUSTOM = "custom"
-    GEMINI = "gemini"
+    GEMINI = "GEMINI"
 
 class OpenAIEnums(Enum):
     SYSTEM = "system"
