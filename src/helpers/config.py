@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     VECTOR_DB_PATH: str
     DISTANCE_METHOD: str = None
 
+    PRIMARY_LANG: str = "en"
+    DEFAULT_LANG: str = "en"
+
+
     class Config:
         # check the file exist test before running
         envfile = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")

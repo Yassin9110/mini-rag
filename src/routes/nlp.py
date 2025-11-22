@@ -96,13 +96,14 @@ async def search_index(request: Request, project_id: str, search_request: Search
 
     nlp_controller = NLPController(vectordb_client= request.app.vdb_client,
                                    embedding_client= request.app.embedding_client,
-                                    generation_client= request.app.generation_client)
+                                    generation_client= request.app.generation_client,
+                                    template_parser = request.app.template_parser)
     
-    result = nlp_controller.search_vectordb_collection(
+    results = nlp_controller.search_vectordb_collection(
         project= project, text= search_request.text, top_k= search_request.limit
     )
 
-    if not result:
+    if not results:
         return JSONResponse(
             status_code= status.HTTP_400_BAD_REQUEST,
             content= {"signal": ResponseStatus.VECTORDB_SEARCH_FAILED}
@@ -110,5 +111,38 @@ async def search_index(request: Request, project_id: str, search_request: Search
     return JSONResponse(
             status_code= status.HTTP_200_OK,
             content= {"signal": ResponseStatus.VECTORDB_SEARCH_SUCCESS,
-                      "result": result}
+                      "result": [result.dict() for result in results]}
     )
+
+@nlp_router.post("/index/answer/{project_id}")
+async def search_index(request: Request, project_id: str, search_request: SearchRequest):
+
+    project_model = await ProjectModel.create_instance(request.app.mongodb_client)
+
+    project = await project_model.get_project_or_create_one(project_id= project_id)
+
+    nlp_controller = NLPController(vectordb_client= request.app.vdb_client,
+                                   embedding_client= request.app.embedding_client,
+                                    generation_client= request.app.generation_client,
+                                    template_parser = request.app.template_parser)
+    
+    answer, full_prompt, chat_history = nlp_controller.answer_rag_questions(
+        project=project, query= search_request.text, top_k= search_request.limit
+    )
+
+    if not answer:
+        return JSONResponse(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            content= { "signal": ResponseStatus.RAG_ANSWER_FAILED.value }
+        )
+    
+    return JSONResponse(
+        status_code= status.HTTP_200_OK,
+        content = {
+            "signal": ResponseStatus.RAG_ANSWER_SUCCESS.value,
+            "answer": answer,
+            "full_prompt": full_prompt,
+            "chat_history": chat_history
+        }
+    )
+    

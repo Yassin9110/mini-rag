@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from helpers.config import get_settings
 from stores.llm.LLMProviderFactory import LLMProviderFactory
 from stores.vdb.VDBProviderFactory import VDBProviderFactory
-
+from stores.llm.templates import TempParser
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,6 +29,7 @@ async def lifespan(app: FastAPI):
     app.vdb_client = vdb_factory.create(provider= app_settings.VECTOR_DB_BACKEND)
 
     app.vdb_client.connect()
+    app.template_parser = TempParser(language= app_settings.PRIMARY_LANG, default_language= app_settings.DEFAULT_LANG)
     # Everything between startup and shutdown runs here
     yield
 

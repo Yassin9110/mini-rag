@@ -17,7 +17,7 @@ class OpenAIProvider(LLMInterface):
         self.generation_model = None
 
         self.client = OpenAI(api_key=self.api_key, base_url=self.api_url)
-
+        self.enums = OpenAIEnums
         self.logger = logging.getLogger(__name__)
 
     

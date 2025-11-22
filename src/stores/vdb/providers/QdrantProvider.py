@@ -3,6 +3,7 @@ from ..VDBEnums import VDBEnums, DistanceMethodEnums
 import logging
 from qdrant_client import QdrantClient, models
 import numpy as np
+from models.db_schemes import RetrievedDocument
 from typing import List, Union
 
 class QdrantProvider(VDBInterface):
@@ -97,11 +98,83 @@ class QdrantProvider(VDBInterface):
     
     def search_by_vector(self, collection_name, query_vector, top_k=10):
         query_vector = np.array(query_vector).astype(np.float32)
-        result = self.client.query_points(
+        results = self.client.query_points(
             collection_name=collection_name,
             query=query_vector.tolist(),
-            limit=top_k
+            limit=top_k,
+            with_payload= True
         )
+        
 
-        return result
+        if not results:
+            return None
+        
+        documents = []
+        for point in results.points:
+            payload = point.payload
 
+            # Access the correct field
+            texts = payload.get("texts")
+
+            # Handle list-or-string cases
+            if isinstance(texts, list):
+                text = "".join(texts)
+            else:
+                text = texts  # string
+
+            documents.append(
+                RetrievedDocument(
+                    text=text,
+                    score=point.score,
+                )
+            )
+
+        return documents
+
+"""
+
+(id=0,
+ version=0,
+   score=0.6377312087487774,
+     payload=
+        {'texts':
+             [
+                'Evolution is the change in the heritable',
+                'heritable characteristics of biological',
+                'populations over successive generations.',
+                'It occurs when evolutionary processes such as',
+                'such as genetic drift and natural selection act',
+                'act on genetic variation, resulting in certain',
+                'certain characteristics becoming more or less',
+                'or less common within a population over',
+                'over successive generations.',
+                'The process of evolution has given rise to', 'rise to biodiversity at every level of biological',
+                'organisation.',
+                'The scientific theory of evolution by natural',
+                'natural selection was conceived independently by',
+                'by two British naturalists, Charles Darwin and',
+                'and Alfred Russel Wallace, in the mid-19th',
+                'mid-19th century as an explanation for why',
+                'for why organisms are adapted to their physical',
+                'physical and biological environments.',
+                'The theory was first set out in detail in',
+                "detail in Darwin's book On the Origin of Species.",
+                'Species.', 'Evolution by natural selection is established by',
+                'by observable facts about living organisms: more',
+                'more offspring are often produced than can',
+                'than can possibly survive;',
+                'traits vary among individuals with respect to',
+                'to their morphology, physiology, and behaviour;',
+                'different traits confer different rates of',
+                'rates of survival and reproduction (differential',
+                'fitness); and traits can be passed from',
+                'from generation to generation (heritability of',
+                'of fitness).', 'In successive generations, members of a',
+                'of a population are therefore more likely to be',
+                'to be replaced by the offspring of parents with',
+                'with favourable characteristics for that',
+                'for that environment.'
+             ], 
+         'metadata': {'source': '/mnt/d/Side-Projects/mini-rag/src/assets/files/1/itfcdq6cd6u4_texttest.txt'}}, vector=None, shard_key=None, order_value=None)
+
+"""

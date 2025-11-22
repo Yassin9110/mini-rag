@@ -21,7 +21,7 @@ class LLMProviderFactory:
                 api_key= self.config.COHERE_API_KEY,
                 default_max_input_tokens= self.config.MAX_INPUT_TOKENS,
                 default_max_output_tokens= self.config.MAX_OUTPUT_TOKENS,
-                default_temperature= self.config.TEMPERATURE
+                temperature= self.config.TEMPERATURE
             )
         elif provider == LLMEnums.GEMINI.value:
             return GeminiProvider(
