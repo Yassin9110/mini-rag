@@ -10,4 +10,14 @@ class ResponseStatus(str, Enum):
     FILE_UPLOADED_FAILED = "file_upload_failed"
     FILE_PROCESSING_FAILED = "file_processing_failed"
     NO_FILES_TO_PROCESS = "no_files_to_process"
+    PROJECT_NOT_FOUND = "project_not_found"
+    INSERT_INTO_VDB_ERROR = "insert_into_vdb_error"
+    INSERT_INTO_VDB_SUCCESS = "insert_into_vdb_success"
+    VECTORDB_COLLECTION_RETRIEVED = "vector_collection_retrieved"
+    VECTORDB_SEARCH_FAILED = "vectordb_search_failed"
+    VECTORDB_SEARCH_SUCCESS = "vectordb_search_success"
+    RAG_ANSWER_FAILED = "rag_answer_failed"
+    RAG_ANSWER_SUCCESS = "rag_answer_success"
+
+
     

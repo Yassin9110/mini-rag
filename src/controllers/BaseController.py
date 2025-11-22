@@ -8,7 +8,15 @@ class BaseController:
         self.app_settings = get_settings()
         self.base_dir = os.path.dirname(os.path.dirname(__file__))
         self.file_dir = os.path.join(self.base_dir, 'assets', 'files')
-
+        self.database_dir = os.path.join(self.base_dir, 'assets', 'vdb')
 
     def generate_random_string(self, length: int = 12):
         return ''.join(random.choices(string.ascii_lowercase + string.digits, k= length))
+    
+    def get_db_path(self, db_name: str):
+
+        db_path = os.path.join(self.database_dir, db_name)
+
+        os.makedirs(db_path, exist_ok= True)
+
+        return db_path
